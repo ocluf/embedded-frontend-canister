@@ -1,0 +1,21 @@
+[package]
+name = "frontend_canister"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+path = "src/lib.rs"
+crate-type = ["cdylib"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dependencies]
+lzma-rs = "0.2.0"
+tar = "0.4.37"
+ic-kit = "0.4.3"
+ic-cdk = "0.3.1"
+serde_cbor = "0.11.2"
+base64 = "0.13.0"
+ic-certified-map = "0.1.0"
+serde = "1"
+serde_bytes = "0.11"
+sha2 = "0.9.1"

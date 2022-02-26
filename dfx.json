@@ -1,0 +1,24 @@
+{
+  "canisters": {
+    "frontend_canister": {
+      "type": "custom",
+      "candid": "rs/src/frontend_canister.did",
+      "wasm": "frontend_canister.wasm",
+      "build": "./build.sh"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "dfx": "0.9.0",
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:8000",
+      "type": "ephemeral"
+    }
+  },
+  "version": 1
+}
