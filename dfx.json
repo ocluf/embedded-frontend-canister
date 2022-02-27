@@ -2,9 +2,10 @@
   "canisters": {
     "frontend_canister": {
       "type": "custom",
-      "candid": "rs/src/frontend_canister.did",
       "wasm": "frontend_canister.wasm",
-      "build": "./build.sh"
+      "build": "./build.sh",
+      "candid": "rs/src/frontend_canister.did"
+
     }
   },
   "defaults": {

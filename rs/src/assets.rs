@@ -1,6 +1,7 @@
 use ic_certified_map::{labeled, labeled_hash, AsHashTree, Hash, RbTree};
 use ic_kit::candid::CandidType;
 use ic_kit::ic;
+use mime_guess;
 use serde::{Deserialize, Serialize};
 use serde_bytes::ByteBuf;
 use sha2::{Digest, Sha256};
@@ -58,11 +59,6 @@ impl Asset {
             bytes,
         }
     }
-
-    pub fn with_header<S: Into<String>>(mut self, key: S, val: S) -> Self {
-        self.headers.push((key.into(), val.into()));
-        self
-    }
 }
 
 #[derive(Default, CandidType, Deserialize, PartialEq, Debug)]
@@ -89,10 +85,15 @@ pub fn http_request(req: HttpRequest) -> HttpResponse {
                 Some(asset) => {
                     let mut headers = asset.headers.clone();
                     headers.push(certificate_header);
-                    if let Some(content_type) = content_type_of(request_path) {
-                        headers.push(("Content-Type".to_string(), content_type.to_string()));
+                    let mime_guess = mime_guess::from_path(request_path);
+                    if let Some(content_type) = mime_guess.first_raw() {
+                        if request_path.ends_with("map") {
+                            headers
+                                .push(("Content-Type".to_string(), "application/json".to_string()));
+                        } else {
+                            headers.push(("Content-Type".to_string(), content_type.to_string()));
+                        }
                     }
-
                     HttpResponse {
                         status_code: 200,
                         headers,
@@ -107,21 +108,6 @@ pub fn http_request(req: HttpRequest) -> HttpResponse {
             }
         }
     }
-}
-
-fn content_type_of(request_path: &str) -> Option<&'static str> {
-    request_path
-        .split('.')
-        .last()
-        .map(|suffix| match suffix {
-            "css" => Some("text/css"),
-            "html" => Some("text/html"),
-            "js" => Some("application/javascript"),
-            "json" => Some("application/json"),
-            "svg" => Some("image/svg+xml"),
-            _ => None,
-        })
-        .flatten()
 }
 
 fn make_asset_certificate_header(asset_hashes: &AssetHashes, asset_name: &str) -> (String, String) {

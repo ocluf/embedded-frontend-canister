@@ -19,3 +19,5 @@ dist/
 
 # compressed frontend
 assets.tar.xz
+
+frontend_canister.wasm
